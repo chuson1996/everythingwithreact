@@ -4,8 +4,12 @@ import {
   withKnobs,
   text, boolean, number, object,
 } from '@kadira/storybook-addon-knobs';
+import { action, decorateAction } from '@kadira/storybook-addon-actions';
 import Select from 'react-select';
+import LazyImage from '../components/LazyImage/LazyImage';
+import ZoomOnHoverImage from '../components/ZoomOnHoverImage/ZoomOnHoverImage';
 import 'react-select/dist/react-select.css';
+import styled, { injectGlobal } from 'styled-components';
 
 const stories = storiesOf('Storybook Knobs', module);
 stories.addDecorator(withKnobs);
@@ -60,5 +64,33 @@ stories.add('Select', () => {
         label: 'Two'
       }]}
     />
+  );
+});
+
+injectGlobal`
+  .fullWidth {
+     width: 100%;
+     display: block;
+  }
+`;
+stories.add('LazyImage', () => {
+  return (
+    <LazyImage
+      className={'fullWidth'}
+      onLoadStatusChange={({ loading }) => {
+        console.log(loading);
+        action('load status change')(loading);
+      }}
+      src={text('imageSrd', 'http://www.tigerfdn.com/wp-content/uploads/2016/05/How-Much-Does-A-Tiger-Weigh.jpg')}/>
+  );
+});
+
+stories.add('Hover Image Effect', () => {
+  return (
+    <div style={{width: '500px'}}>
+      <ZoomOnHoverImage
+        src="https://ichef.bbci.co.uk/images/ic/960x540/p01wjwl7.jpg"
+      />
+    </div>
   );
 });
